@@ -1,0 +1,37 @@
+﻿@page "/"
+
+<JobsContainer Jobs="Jobs" OnStatusUpdated="HandleStatusUpdated">
+    <JobList ListStatus="JobStatuses.Task" AllowedStatuses="@(new JobStatuses[] { JobStatuses.Started})" />
+    <JobList ListStatus="JobStatuses.Started" AllowedStatuses="@(new JobStatuses[] { JobStatuses.Task})" />
+    <JobList ListStatus="JobStatuses.Completed" AllowedStatuses="@(new JobStatuses[] { JobStatuses.Started })" />
+</JobsContainer>
+
+<hr />
+<p>Выполняемая задача: <strong>@lastUpdatedJob</strong></p>
+<hr />
+
+@foreach (var task in Jobs)
+{
+    <p>@task.Description - <strong>@task.Status</strong></p>
+}
+
+@code {
+
+    List<JobModel> Jobs = new List<JobModel>();
+    string? lastUpdatedJob = "";
+  
+
+    protected override void OnInitialized()
+    {
+        Jobs.Add(new JobModel { Id = 1, Description = "Посмотреть отчеты по работе менеджеров", Status = JobStatuses.Task, LastUpdated = DateTime.Now });
+        Jobs.Add(new JobModel { Id = 2, Description = "Согласовать план продаж ", Status = JobStatuses.Task, LastUpdated = DateTime.Now });
+        Jobs.Add(new JobModel { Id = 3, Description = "Проверить договор", Status = JobStatuses.Task, LastUpdated = DateTime.Now });
+        Jobs.Add(new JobModel { Id = 4, Description = "Прослушать записи звонков", Status = JobStatuses.Task, LastUpdated = DateTime.Now });
+        Jobs.Add(new JobModel { Id = 5, Description = "Провести планерку с менеджерами", Status = JobStatuses.Task, LastUpdated = DateTime.Now });
+    }
+
+    void HandleStatusUpdated(JobModel updatedJob)
+    {
+        lastUpdatedJob = updatedJob.Description;
+    }
+}
